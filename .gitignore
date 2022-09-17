@@ -1,0 +1,11 @@
+# Output
+dist/
+types/
+
+# NPM
+node_modules/
+
+# Dev
+.env
+test.*
+.vscode/

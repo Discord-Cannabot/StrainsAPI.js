@@ -1,0 +1,11 @@
+# Output
+dist/
+types/
+
+# Git
+.gitignore
+
+# Dev
+.env
+test.ts
+.vscode/
