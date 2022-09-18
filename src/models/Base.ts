@@ -2,7 +2,7 @@
  * Base Class that each object will extend
  * @template Data Interface for the Raw Data returned from the API
  */
-class Base<Data extends any> {
+export class Base<Data extends any> {
 	/**
 	 * The Data passed to the constructor
 	 */

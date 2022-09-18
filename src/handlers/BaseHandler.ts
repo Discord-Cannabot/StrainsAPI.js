@@ -5,7 +5,7 @@ import { MemoryStorage } from "node-ts-cache-storage-memory";
 
 type ClassConstructor = new (...args: any[]) => any;
 
-class BaseHandler<Holds extends ClassConstructor> {
+export class BaseHandler<Holds extends ClassConstructor> {
 	readonly #client: Client;
 	readonly #cache: CacheContainer;
 	readonly #holds: Holds;
