@@ -1,2 +1,1 @@
-export { default } from "./src/models/Client";
-export * from "./src/models/Strain";
+export { default } from "./src/client/BaseClient";

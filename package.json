@@ -1,6 +1,6 @@
 {
 	"name": "cannabot_test",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "testing the cannabot api and bot",
 	"main": "dist",
 	"types": "types",

@@ -1,14 +1,23 @@
 import axios, { AxiosInstance } from "axios";
 
 import { Agent } from "https";
+import { ICachingOptions } from "node-ts-cache";
+import { RecipeHandler } from "../handlers/RecipeHandler";
 import StrainHandler from "../handlers/StrainHandler";
 
-export class Client {
+/**
+ * Base Client for the Discord Bot
+ */
+export class BaseClient {
 	// Private to prevent overwriting
 	readonly #instance: AxiosInstance;
 	readonly #strains: StrainHandler;
+	readonly #recipes: RecipeHandler;
 
-	constructor(bearer: string) {
+	/**
+	 * @param bearer The bearer token used to interact with the cannabot api
+	 */
+	constructor(bearer: string, options?: ICachingOptions) {
 		this.#instance = axios.create({
 			baseURL: "https://cannabot.net/api",
 			headers: {
@@ -17,7 +26,8 @@ export class Client {
 			httpsAgent: new Agent({ keepAlive: true }),
 		});
 
-		this.#strains = new StrainHandler(this);
+		this.#strains = new StrainHandler(this, options);
+		this.#recipes = new RecipeHandler(this, options);
 	}
 
 	/**
@@ -28,6 +38,13 @@ export class Client {
 	}
 
 	/**
+	 * Recipe handler for the Client
+	 */
+	public get recipes() {
+		return this.#recipes;
+	}
+
+	/**
 	 * The Axios Instance used to make requests
 	 */
 	public get instance() {
@@ -35,4 +52,4 @@ export class Client {
 	}
 }
 
-export default Client;
+export default BaseClient;
