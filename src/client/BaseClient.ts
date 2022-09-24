@@ -32,7 +32,7 @@ export class BaseClient {
 			(success) => success,
 			(error) => {
 				if (!BaseClient.isStrainsError(error)) throw error;
-				console.log(error.response?.data ?? error.response);
+				//console.log(error.response?.data ?? error.response);
 				throw new StrainsError(error);
 			}
 		);
