@@ -11,6 +11,7 @@ export interface StrainsAPIError {
 
 /**
  * Represents an Error thrown by StrainsAPI
+ * @extends Error
  */
 export class StrainsError extends Error {
 	readonly #code: string;
@@ -28,7 +29,7 @@ export class StrainsError extends Error {
 
 		this.#status = data.status;
 
-		Error.captureStackTrace(this.constructor);
+		Error.captureStackTrace(this, StrainsError);
 	}
 
 	/**
