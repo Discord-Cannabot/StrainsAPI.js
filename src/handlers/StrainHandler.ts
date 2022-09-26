@@ -1,20 +1,31 @@
-import { RawStrain, Strain, StrainRace } from "../models/Strain";
+import { RawStrain, Strain, StrainRaceType } from "../models/Strain";
 
 import BaseHandler from "./BaseHandler";
 import Client from "../client/BaseClient";
 import { ICachingOptions } from "node-ts-cache";
 
-export enum STRAIN_SEARCH_BY {
-	Name = "name",
-	Id = "id",
-	Race = "race",
-	Rating = "rating",
+/**
+ * Terms you can search for strains by
+ */
+export enum SearchStrainBy {
+	NAME = "name",
+	ID = "id",
+	RACE = "race",
+	RATING = "rating",
 }
 
-export type StrainSearchBy = `${STRAIN_SEARCH_BY}`;
+export type StrainSearchTerm = `${SearchStrainBy}`;
+
+export interface StrainSearchParams {
+	name?: string;
+	description?: string;
+	race?: StrainRaceType;
+	rating?: number;
+}
 
 /**
  * Handles Strains for the Client with a cache
+ * @extends BaseHandler<Strain>
  */
 class StrainHandler extends BaseHandler<typeof Strain> {
 	/**
@@ -35,35 +46,56 @@ class StrainHandler extends BaseHandler<typeof Strain> {
 		if (strains.length > 0 && !force) return strains;
 		const { data } = await this.client.instance.get<RawStrain[]>("strains");
 
-		for (const rawStrain of data) {
-			strains.push(new Strain(rawStrain));
+		for (const strain of data) {
+			strains.push(new Strain(strain));
 		}
 		await this.set("all", strains);
 		return strains;
 	}
 
+	// /**
+	//  * Search for a strain by keys
+	//  * @param by What to search by
+	//  * @param query The query for the search
+	//  * @param force Force an API request and update the cache
+	//  * @returns Array of Strains
+	//  */
+	// async search(by: StrainSearchTerm, query: string, force: boolean = false) {
+	// 	let strains = await this.cache.getItem<Strain[]>(query);
+	// 	if (strains && !force) return strains;
+	// 	strains = [];
+
+	// 	const { data } = await this.client.instance.get<RawStrain[]>(
+	// 		`strains/search/${by}/${query}`
+	// 	);
+
+	// 	for (const strain of data) {
+	// 		strains.push(new Strain(strain));
+	// 	}
+
+	// 	this.set(query, strains);
+	// 	return strains;
+	// }
+
 	/**
-	 * Search for a strain by keys
-	 * @param by What to search by
-	 * @param query The query for the search
+	 * Filter strains using the API
+	 * @param params Params to filter strains for
 	 * @param force Force an API request and update the cache
-	 * @returns Array of Strains
 	 */
-	async search(by: StrainSearchBy, query: string, force: boolean = false) {
-		let strains = await this.cache.getItem<Strain[]>(query);
+	async filter(params: StrainSearchParams, force: boolean = false) {
+		let strains = await this.cache.getItem<Strain[]>(JSON.stringify(params, null, 0));
 		if (strains && !force) return strains;
 		strains = [];
 
-		const { data } = await this.client.instance.get<RawStrain[]>(
-			`strains/search/${by}/${query}`
-		);
+		const { data } = await this.client.instance.get<RawStrain[]>("strains/search", {
+			params,
+		});
 
-		for (let rawStrain of data) {
-			const strain = new Strain(rawStrain);
-			strains.push(strain);
+		for (const strain of data) {
+			strains.push(new Strain(strain));
 		}
 
-		this.set(query, strains);
+		this.set(JSON.stringify(params, null, 0), strains, this.config);
 		return strains;
 	}
 
@@ -73,17 +105,17 @@ class StrainHandler extends BaseHandler<typeof Strain> {
 	 * @param force Force an API request and update the cache
 	 */
 	async byName(name: string, force: boolean = false): Promise<Strain[]> {
-		return await this.search(STRAIN_SEARCH_BY.Name, name, force);
+		return await this.filter({ name }, force);
 	}
 
-	/**
-	 * Search for a strain by ID
-	 * @param id Id of the strain
-	 * @param force Force an API request and update the cache
-	 */
-	async byId(id: number, force: boolean = false): Promise<Strain[]> {
-		return await this.search(STRAIN_SEARCH_BY.Id, `${id}`, force);
-	}
+	// /**
+	//  * Search for a strain by ID
+	//  * @param id Id of the strain
+	//  * @param force Force an API request and update the cache
+	//  */
+	// async byId(id: number, force: boolean = false): Promise<Strain[]> {
+	// 	return await this.search(SearchStrainBy.ID, `${id}`, force);
+	// }
 
 	/**
 	 * Search for a strain by rating
@@ -91,7 +123,7 @@ class StrainHandler extends BaseHandler<typeof Strain> {
 	 * @param force Force an API request and update the cache
 	 */
 	async byRating(rating: number, force: boolean = false): Promise<Strain[]> {
-		return await this.search(STRAIN_SEARCH_BY.Rating, `${rating}`, force);
+		return await this.filter({ rating }, force);
 	}
 
 	/**
@@ -99,8 +131,17 @@ class StrainHandler extends BaseHandler<typeof Strain> {
 	 * @param race Race to search for (`indica` | `sativa` | `hybrid`)
 	 * @param force Force an API request and update the cache
 	 */
-	async byRace(race: StrainRace, force: boolean = false): Promise<Strain[]> {
-		return await this.search(STRAIN_SEARCH_BY.Race, race, force);
+	async byRace(race: StrainRaceType, force: boolean = false): Promise<Strain[]> {
+		return await this.filter({ race }, force);
+	}
+
+	/**
+	 * Searches for strains based on data found in the description
+	 * @param description Description keywords to search for
+	 * @param force Force an API request and update the cache
+	 */
+	async byDescription(description: string, force: boolean = false): Promise<Strain[]> {
+		return await this.filter({ description }, force);
 	}
 }
 

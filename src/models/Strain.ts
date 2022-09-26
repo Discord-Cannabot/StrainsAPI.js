@@ -1,27 +1,31 @@
 import Base from "./Base";
+import { DefaultStrainsAPIData } from "./Base";
 
-export enum STRAIN_RACE {
+/**
+ * All strain races
+ */
+enum StrainRace {
 	INDICA = "indica",
 	SATIVA = "sativa",
 	HYBRID = "hybrid",
-	TYPE = "Type",
 }
 
-export type StrainRace = `${STRAIN_RACE}`;
+/**
+ * `"Type"` used in broken Strain data
+ */
+export type StrainRaceType = `${StrainRace}`;
 
 /**
  * The Raw Strain structure returned by the API
  */
-export interface RawStrain {
+export interface RawStrain extends DefaultStrainsAPIData {
 	id: number;
 	name: string;
-	race: StrainRace;
+	race: StrainRaceType;
 	effects: string;
 	flavours: string;
 	description: string;
 	rating: string;
-	created_at: string;
-	updated_at: string;
 }
 
 /**
@@ -34,6 +38,10 @@ export class Strain extends Base<RawStrain> {
 	 */
 	constructor(data: RawStrain) {
 		super(data);
+	}
+
+	static get Race() {
+		return StrainRace;
 	}
 
 	/**
@@ -53,12 +61,12 @@ export class Strain extends Base<RawStrain> {
 	/**
 	 * The race of the strain
 	 */
-	get race(): StrainRace {
+	get race(): StrainRaceType {
 		return this.raw.race;
 	}
 
 	/**
-	 * Reported effects of the strain
+	 * Reported effects
 	 */
 	get effects(): string[] {
 		return this.raw.effects.split(",");
@@ -90,7 +98,7 @@ export class Strain extends Base<RawStrain> {
 	/**
 	 * The Rating of the strain
 	 * @example
-	 * Strain.rating: "4.4"
+	 * Strain.rating: 4.4
 	 */
 	get rating(): number {
 		return Number.parseFloat(this.raw.rating);

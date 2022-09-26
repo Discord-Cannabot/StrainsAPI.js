@@ -1,4 +1,4 @@
-export interface DefaultCannabotData {
+export interface DefaultStrainsAPIData {
 	created_at: string;
 	updated_at: string;
 }
@@ -7,11 +7,12 @@ export interface DefaultCannabotData {
  * Base Class that each object will extend
  * @template Data Interface for the Raw Data returned from the API
  */
-export class Base<Data extends DefaultCannabotData = DefaultCannabotData> {
+export class Base<Data extends DefaultStrainsAPIData = DefaultStrainsAPIData> {
 	/**
 	 * The Data passed to the constructor
 	 */
 	#data: Data;
+
 	/**
 	 * @param data The data to create the instance with
 	 */

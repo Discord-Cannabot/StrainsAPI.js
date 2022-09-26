@@ -1,4 +1,5 @@
-import axios, { AxiosInstance } from "axios";
+import StrainsError, { StrainsAPIError } from "../Errors/StrainsError";
+import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { Agent } from "https";
 import { ICachingOptions } from "node-ts-cache";
@@ -6,7 +7,7 @@ import { RecipeHandler } from "../handlers/RecipeHandler";
 import StrainHandler from "../handlers/StrainHandler";
 
 /**
- * Base Client for the Discord Bot
+ * Base Client Strains API
  */
 export class BaseClient {
 	// Private to prevent overwriting
@@ -26,8 +27,27 @@ export class BaseClient {
 			httpsAgent: new Agent({ keepAlive: true }),
 		});
 
+		// Handle API errors
+		this.#instance.interceptors.response.use(
+			(success) => success,
+			(error) => {
+				if (!BaseClient.isStrainsError(error)) throw error;
+				//console.log(error.response?.data ?? error.response);
+				throw new StrainsError(error);
+			}
+		);
+
 		this.#strains = new StrainHandler(this, options);
 		this.#recipes = new RecipeHandler(this, options);
+	}
+
+	/**
+	 * Checks if an error is a strains API error
+	 * @param error Error to check
+	 */
+	static isStrainsError(error: any): error is AxiosError<StrainsAPIError> {
+		if (!axios.isAxiosError(error)) return false;
+		return !!error.response?.data;
 	}
 
 	/**

@@ -4,11 +4,17 @@ import { ICachingOptions } from "node-ts-cache";
 import { RawRecipe } from "../models/Recipe";
 import Recipe from "../models/Recipe";
 
-export enum RECIPE_SEARCH_BY {
-	Id = "id",
+/**
+ * Values you can search recipes by
+ */
+export enum SearchRecipeBy {
+	ID = "id",
 }
 
-export type RecipeSearchBy = `${RECIPE_SEARCH_BY}`;
+/**
+ * Term used to narrow search
+ */
+export type RecipeSearchTerm = `${SearchRecipeBy}`;
 
 /**
  * Handles recipes for the Client with cache
@@ -32,8 +38,8 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 		if (recipes.length > 0 && !force) return recipes;
 		const { data } = await this.client.instance.get<RawRecipe[]>("recipes");
 
-		for (const rawRecipe of data) {
-			recipes.push(new Recipe(rawRecipe));
+		for (const recipe of data) {
+			recipes.push(new Recipe(recipe));
 		}
 		await this.set("all", recipes);
 		return recipes;
@@ -45,7 +51,7 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 	 * @param query Search query
 	 * @param force Force an API request and update the cache
 	 */
-	async search(by: RecipeSearchBy, query: string, force: boolean = false) {
+	async search(by: RecipeSearchTerm, query: string, force: boolean = false) {
 		let recipes = await this.cache.getItem<Recipe[]>(query);
 		if (recipes && !force) return recipes;
 		recipes = [];
@@ -54,12 +60,11 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 			`recipes/search/${by}/${query}`
 		);
 
-		for (let rawRecipe of data) {
-			const recipe = new Recipe(rawRecipe);
-			recipes.push(recipe);
+		for (const recipe of data) {
+			recipes.push(new Recipe(recipe));
 		}
 
-		this.set(query, recipes);
+		await this.set(query, recipes);
 		return recipes;
 	}
 
@@ -69,6 +74,6 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 	 * @param force Force an API request and update the cache
 	 */
 	async byId(id: number, force: boolean = false) {
-		return await this.search(RECIPE_SEARCH_BY.Id, `${id}`, force);
+		return await this.search(SearchRecipeBy.ID, `${id}`, force);
 	}
 }
