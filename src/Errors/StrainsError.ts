@@ -40,10 +40,16 @@ export class StrainsError extends Error {
 		Error.captureStackTrace(this, StrainsError);
 	}
 
+	/**
+	 * The Raw error returned by the API
+	 */
 	get raw(): StrainsAPIError {
 		return this.#raw;
 	}
 
+	/**
+	 * List of errors that provide context to the error if applicable
+	 */
 	get errors(): StrainsAPIError["errors"] {
 		return this.raw.errors;
 	}
