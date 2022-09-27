@@ -14,11 +14,13 @@ export class BaseClient {
 	readonly #instance: AxiosInstance;
 	readonly #strains: StrainHandler;
 	readonly #recipes: RecipeHandler;
+	readonly #cacheConfig: ICachingOptions;
 
 	/**
 	 * @param bearer The bearer token used to interact with the cannabot api
 	 */
-	constructor(bearer: string, options?: ICachingOptions) {
+	constructor(bearer: string, options?: Partial<ICachingOptions>) {
+		this.#cacheConfig = Object.assign(BaseClient.DefaultCacheConfig, options);
 		this.#instance = axios.create({
 			baseURL: "https://cannabot.net/api",
 			headers: {
@@ -37,17 +39,42 @@ export class BaseClient {
 			}
 		);
 
-		this.#strains = new StrainHandler(this, options);
-		this.#recipes = new RecipeHandler(this, options);
+		this.#strains = new StrainHandler(this, this.cacheConfig);
+		this.#recipes = new RecipeHandler(this, this.cacheConfig);
 	}
 
 	/**
 	 * Checks if an error is a strains API error
 	 * @param error Error to check
+	 * @internal
 	 */
-	static isStrainsError(error: any): error is AxiosError<StrainsAPIError> {
+	protected static isStrainsError(error: any): error is AxiosError<StrainsAPIError> {
 		if (!axios.isAxiosError(error)) return false;
 		return !!error.response?.data;
+	}
+
+	/**
+	 * Default Cache Config for Handlers
+	 */
+	public static DefaultCacheConfig: ICachingOptions = {
+		ttl: 600,
+		isLazy: true,
+		isCachedForever: false,
+		calculateKey: JSON.stringify,
+	};
+
+	/**
+	 * The config used for caching api data
+	 */
+	get cacheConfig(): ICachingOptions {
+		return this.#cacheConfig;
+	}
+
+	/**
+	 * Sets the config caches
+	 */
+	set cacheConfig(options: Partial<ICachingOptions>) {
+		Object.assign(this.#cacheConfig, options);
 	}
 
 	/**
@@ -66,6 +93,7 @@ export class BaseClient {
 
 	/**
 	 * The Axios Instance used to make requests
+	 * @internal
 	 */
 	public get instance() {
 		return this.#instance;

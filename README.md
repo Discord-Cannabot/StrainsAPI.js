@@ -6,14 +6,19 @@
 
 An API Wrapper for [StrainsAPI](https://cannabot.net/api) written in TypeScript
 
-## Features
+- [Features](#features)
+- [Installation](#installation)
+- [Usage/Examples](#usageexamples)
+- [Support](#support)
+
+# Features
 
 -   Strain lookup and filtering
 -   Recipe lookup and filtering
 -   Configurable cacheing
 -   Fluent and beautiful error messages
 
-## Installation
+# Installation
 
 Install with npm
 
@@ -21,7 +26,7 @@ Install with npm
 npm install strainsapi.js
 ```
 
-## Usage/Examples
+# Usage/Examples
 
 ```typescript
 import StrainsClient from "strainsapi.js";
@@ -69,6 +74,6 @@ async function main() {
 main();
 ```
 
-## Support
+# Support
 
 For support, join the [Offical Discord Server](https://discord.gg/48smXkY) for Cannabot and StrainsAPI

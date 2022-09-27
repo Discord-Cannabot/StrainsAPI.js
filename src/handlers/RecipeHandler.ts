@@ -25,7 +25,7 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 	 * @param client Client attached to the handler
 	 * @param options Options for the handler
 	 */
-	constructor(client: Client, options?: ICachingOptions) {
+	constructor(client: Client, options?: Partial<ICachingOptions>) {
 		super(client, Recipe, options);
 	}
 

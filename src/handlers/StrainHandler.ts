@@ -32,7 +32,7 @@ class StrainHandler extends BaseHandler<typeof Strain> {
 	 * @param client Client attached to the handler
 	 * @param options Options for the cache
 	 */
-	constructor(client: Client, options?: ICachingOptions) {
+	constructor(client: Client, options?: Partial<ICachingOptions>) {
 		super(client, Strain, options);
 	}
 

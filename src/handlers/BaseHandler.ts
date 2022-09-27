@@ -20,22 +20,12 @@ export class BaseHandler<Holds extends ClassConstructor> {
 	public config: ICachingOptions;
 
 	/**
-	 * Default Cache Config for Handlers
-	 */
-	public static DefaultCacheConfig: ICachingOptions = {
-		ttl: 600,
-		isLazy: true,
-		isCachedForever: false,
-		calculateKey: JSON.stringify,
-	};
-
-	/**
 	 * @param client Client attached to the handler
 	 * @param holds The Class this object handles
 	 * @param options Options for the cache
 	 */
 	constructor(client: Client, holds: Holds, options?: Partial<ICachingOptions>) {
-		this.config = Object.assign(BaseHandler.DefaultCacheConfig, options);
+		this.config = Object.assign(client.cacheConfig, options);
 		this.#client = client;
 		this.#holds = holds;
 		this.#cache = new CacheContainer(new MemoryStorage());

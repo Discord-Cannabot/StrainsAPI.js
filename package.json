@@ -1,6 +1,6 @@
 {
 	"name": "strainsapi.js",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "API Wrapper for StrainsAPI written in TypeScript",
 	"main": "dist",
 	"types": "types",
@@ -9,7 +9,8 @@
 		"clean": "rm -r -f dist && rm -r -f types",
 		"rebuild": "npm run clean && npm run build",
 		"start": "ts-node test.ts",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "nyc mocha --require ts-node/register tests/**/*.test.ts --delay",
+		"quick-test": "mocha --require ts-node/register tests/**/*.test.ts --delay"
 	},
 	"contributors": [
 		"Jay",
@@ -21,8 +22,15 @@
 		"node-ts-cache-storage-memory": "^4.4.0"
 	},
 	"devDependencies": {
+		"@types/chai": "^4.3.3",
+		"@types/mocha": "^9.1.1",
 		"@types/node": "^18.7.18",
+		"chai": "^4.3.6",
 		"dotenv": "^16.0.2",
+		"mocha": "^10.0.0",
+		"nyc": "^15.1.0",
+		"ts-node": "^10.9.1",
+		"tsc": "^2.0.4",
 		"typescript": "^4.8.3"
 	}
 }
