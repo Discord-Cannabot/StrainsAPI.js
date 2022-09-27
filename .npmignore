@@ -8,4 +8,6 @@ types/
 # Dev
 .env
 test.ts
+tests/
 .vscode/
+.nyc_output/
