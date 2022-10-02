@@ -15,5 +15,5 @@
 		"noImplicitOverride": true,
 		"noUnusedLocals": true
 	},
-	"exclude": ["test.ts", "dist", "types"]
+	"exclude": ["test.ts", "dist", "types", "tests"]
 }
