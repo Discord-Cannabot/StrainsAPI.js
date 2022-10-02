@@ -1,6 +1,5 @@
-# Output
-dist/
-types/
+# Src
+src/
 
 # Git
 .gitignore
@@ -11,3 +10,4 @@ test.ts
 tests/
 .vscode/
 .nyc_output/
+tsconfig.json
