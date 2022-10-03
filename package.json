@@ -1,6 +1,6 @@
 {
 	"name": "strainsapi.js",
-	"version": "0.4.0",
+	"version": "0.4.3",
 	"description": "API Wrapper for StrainsAPI written in TypeScript",
 	"main": "dist",
 	"types": "types",
@@ -31,6 +31,6 @@
 		"nyc": "^15.1.0",
 		"ts-node": "^10.9.1",
 		"tsc": "^2.0.4",
-		"typescript": "^4.8.3"
+		"typescript": "^4.8.4"
 	}
 }
