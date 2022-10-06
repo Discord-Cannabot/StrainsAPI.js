@@ -6,13 +6,13 @@ import { expect } from "chai";
 
 const client = new BaseClient(process.env.API_TOKEN!);
 
+let strain: Strain;
+
+before(async () => {
+	strain = (await client.strains.all())[0];
+});
+
 describe("models/Strain", () => {
-	let strain: Strain;
-
-	before(async () => {
-		strain = (await client.strains.all())[0];
-	});
-
 	context("static Race", () => {
 		it("has all 3 races", () => {
 			expect(Strain.Race).to.not.be.undefined;
