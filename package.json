@@ -8,6 +8,7 @@
 		"build": "tsc",
 		"clean": "rm -r -f dist && rm -r -f types",
 		"rebuild": "npm run clean && npm run build",
+		"watch": "tsc --watch",
 		"start": "ts-node test.ts",
 		"test": "nyc --check-coverage mocha --require ts-node/register tests/**/*.test.ts --timeout 10000 --allow-uncaught",
 		"test:quick": "mocha --require ts-node/register tests/**/*.test.ts --allow-uncaught --b"
@@ -30,7 +31,6 @@
 		"mocha": "^10.0.0",
 		"nyc": "^15.1.0",
 		"ts-node": "^10.9.1",
-		"tsc": "^2.0.4",
 		"typescript": "^4.8.4"
 	}
 }
