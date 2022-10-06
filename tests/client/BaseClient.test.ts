@@ -1,5 +1,3 @@
-import "mocha";
-
 import BaseClient from "../../src/client/BaseClient";
 import { ICachingOptions } from "node-ts-cache";
 import { RecipeHandler } from "../../src/handlers/RecipeHandler";
@@ -78,10 +76,7 @@ describe("BaseClient", () => {
 		});
 
 		it("recipes is RecipeHandler", () => {
-			expect(client.recipes).to.be.an.instanceOf(
-				RecipeHandler,
-				`BaseClient.recipes: ${client.recipes.constructor.name}`
-			);
+			expect(client.recipes).to.be.an.instanceOf(RecipeHandler);
 		});
 	});
 });
