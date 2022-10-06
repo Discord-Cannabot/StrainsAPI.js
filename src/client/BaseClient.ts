@@ -1,4 +1,4 @@
-import StrainsError, { StrainsAPIError } from "../Errors/StrainsError";
+import StrainsError, { StrainsAPIError } from "../errors/StrainsError";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { Agent } from "https";
