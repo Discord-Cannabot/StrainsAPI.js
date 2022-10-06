@@ -6,6 +6,7 @@ src/
 
 # Dev
 .env
+.env.example
 test.ts
 tests/
 .vscode/
