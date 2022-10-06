@@ -9,8 +9,8 @@
 		"clean": "rm -r -f dist && rm -r -f types",
 		"rebuild": "npm run clean && npm run build",
 		"start": "ts-node test.ts",
-		"test": "nyc mocha --require ts-node/register tests/**/*.test.ts --delay",
-		"quick-test": "mocha --require ts-node/register tests/**/*.test.ts --delay"
+		"test": "nyc --check-coverage mocha --require ts-node/register tests/**/*.test.ts --timeout 10000 --allow-uncaught",
+		"test:quick": "mocha --require ts-node/register tests/**/*.test.ts --allow-uncaught --b"
 	},
 	"contributors": [
 		"Jay",
