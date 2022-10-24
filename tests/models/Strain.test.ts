@@ -6,19 +6,13 @@ import { expect } from "chai";
 
 const client = new BaseClient(process.env.API_TOKEN!);
 
-async function getStrain() {
-	return (await client.strains.all())[0];
-}
+let strain: Strain;
 
-describe("Strain", () => {
-	let strain: Strain;
+before(async () => {
+	strain = (await client.strains.all())[0];
+});
 
-	// Updates the strain value then runs the tests
-	getStrain().then((s) => {
-		strain = s;
-		run();
-	});
-
+describe("models/Strain", () => {
 	context("static Race", () => {
 		it("has all 3 races", () => {
 			expect(Strain.Race).to.not.be.undefined;
@@ -95,24 +89,6 @@ describe("Strain", () => {
 
 		it("should match strain.raw.rating", () => {
 			expect(strain.rating).to.be.equal(Number.parseFloat(strain.raw.rating));
-		});
-	});
-
-	context("createdAt", () => {
-		it("createdAt is a Date", () => {
-			expect(strain.createdAt).to.be.an.instanceOf(Date);
-		});
-
-		it("createdAt.getTime() == createdAtTimestamp", () => {
-			expect(strain.createdAt.getTime()).to.be.equal(strain.createdAtTimestamp);
-		});
-	});
-
-	context("createdAtTimestamp", () => {
-		it("uses strain.raw.created_at & in ms", () => {
-			expect(strain.createdAtTimestamp).to.be.equal(
-				Date.parse(strain.raw.created_at)
-			);
 		});
 	});
 });

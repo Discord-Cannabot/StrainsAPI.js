@@ -1,10 +1,14 @@
-import StrainsError, { StrainsAPIError } from "../Errors/StrainsError";
+import StrainsError, { StrainsAPIError } from "../errors/StrainsError";
 import axios, { AxiosError, AxiosInstance } from "axios";
 
 import { Agent } from "https";
 import { ICachingOptions } from "node-ts-cache";
 import { RecipeHandler } from "../handlers/RecipeHandler";
 import StrainHandler from "../handlers/StrainHandler";
+
+export interface BaseClientConfig {
+	token: string;
+}
 
 /**
  * Base Client Strains API
@@ -15,16 +19,20 @@ export class BaseClient {
 	readonly #strains: StrainHandler;
 	readonly #recipes: RecipeHandler;
 	readonly #cacheConfig: ICachingOptions;
+	public config: BaseClientConfig;
 
 	/**
-	 * @param bearer The bearer token used to interact with the cannabot api
+	 * @param token The bearer token used to interact with the cannabot api
 	 */
-	constructor(bearer: string, options?: Partial<ICachingOptions>) {
+	constructor(token: string, options?: Partial<ICachingOptions>) {
+		this.config = {
+			token,
+		};
 		this.#cacheConfig = Object.assign(BaseClient.DefaultCacheConfig, options);
 		this.#instance = axios.create({
 			baseURL: "https://cannabot.net/api",
 			headers: {
-				authorization: `Bearer ${bearer}`,
+				authorization: `Bearer ${token}`,
 			},
 			httpsAgent: new Agent({ keepAlive: true }),
 		});

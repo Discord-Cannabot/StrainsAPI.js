@@ -24,32 +24,38 @@ export class Recipe extends Base<RawRecipe> {
 		super(data);
 	}
 
-	get id() {
+	/**
+	 * Recipe ID
+	 */
+	get id(): number {
 		return this.raw.id;
 	}
 
-	get name() {
+	/**
+	 * Name of the Recipe
+	 */
+	get name(): string {
 		return this.raw.name;
 	}
 
 	/**
 	 * List of ingredients
 	 */
-	get ingredients() {
+	get ingredients(): string[] {
 		return this.raw.ingredients;
 	}
 
 	/**
 	 * List of steps in order
 	 */
-	get steps() {
+	get steps(): string[] {
 		return this.raw.steps;
 	}
 
 	/**
 	 * Image url for the recipe
 	 */
-	get image() {
+	get image(): string {
 		return this.raw.image;
 	}
 }
