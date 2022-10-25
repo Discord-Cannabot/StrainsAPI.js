@@ -3,6 +3,9 @@
 
 name: Node.js CI
 
+env:
+  API_TOKEN: ${{ secrets.API_TOKEN }}
+
 on:
   push:
     branches: [ "master", "dev" ]
@@ -13,8 +16,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
-    environment: Test
 
     strategy:
       matrix:
