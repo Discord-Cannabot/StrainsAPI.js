@@ -10,6 +10,10 @@ export interface BaseClientConfig {
 	token: string;
 }
 
+export const StrainsTokenRegex = /\$\d\D\$\d{2}\$[A-Z0-9]{31}\.[A-Z0-9]{21}/i
+
+
+
 /**
  * Base Client Strains API
  */
@@ -23,11 +27,16 @@ export class BaseClient {
 
 	/**
 	 * @param token The bearer token used to interact with the cannabot api
+	 * @param options Options to configure the Client with
 	 */
 	constructor(token: string, options?: Partial<ICachingOptions>) {
+		if (typeof token !== 'string') throw new Error(`Invalid token type - Expected: string | Actual: ${typeof token}`);
+
+		if (!StrainsTokenRegex.test(token)) throw new Error(`Invalid token: ${typeof token}`)
 		this.config = {
 			token,
 		};
+
 		this.#cacheConfig = Object.assign(BaseClient.DefaultCacheConfig, options);
 		this.#instance = axios.create({
 			baseURL: "https://cannabot.net/api",
