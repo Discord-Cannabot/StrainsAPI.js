@@ -2,10 +2,8 @@ import BaseClient from "../../src/client/BaseClient";
 import { ICachingOptions } from "node-ts-cache";
 import { RecipeHandler } from "../../src/handlers/RecipeHandler";
 import StrainHandler from "../../src/handlers/StrainHandler";
-import dotenv from "dotenv";
-import { expect } from "chai";
 
-dotenv.config();
+import { expect } from "chai";
 
 const TOKEN: string = process.env.API_TOKEN!;
 
