@@ -1,5 +1,3 @@
-import "mocha";
-
 import BaseClient from "../../src/client/BaseClient";
 import Recipe from "../../src/models/Recipe";
 import { expect } from "chai";

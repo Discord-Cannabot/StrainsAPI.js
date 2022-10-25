@@ -1,5 +1,3 @@
-import "mocha";
-
 import BaseClient from "../../src/client/BaseClient";
 import Strain from "../../src/models/Strain";
 import { expect } from "chai";
