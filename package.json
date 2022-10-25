@@ -10,8 +10,9 @@
 		"rebuild": "npm run clean && npm run build",
 		"watch": "tsc --watch",
 		"start": "ts-node test.ts",
-		"test": "env-cmd nyc --check-coverage mocha --require ts-node/register tests/**/*.test.ts --timeout 10000 --allow-uncaught",
-		"test:quick": "env-cmd mocha --require ts-node/register tests/**/*.test.ts --allow-uncaught --b"
+		"test": "nyc --check-coverage mocha --require ts-node/register tests/**/*.test.ts --timeout 10000 --allow-uncaught",
+		"test:env": "env-cmd npm run test",
+		"test:quick": "mocha --require ts-node/register tests/**/*.test.ts --allow-uncaught --b"
 	},
 	"contributors": [
 		"Jay",
