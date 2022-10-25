@@ -74,6 +74,15 @@ export class StrainsError extends Error {
 	get status(): number {
 		return this.#status;
 	}
+
+	/**
+	 * Checks if an argument is an instance of StrainsError
+	 * @param error Error to check
+	 * @returns error instanceof StrainsError
+	 */
+	public static isStrainsError(error: any): error is StrainsError {
+		return error instanceof StrainsError;
+	}
 }
 
 export default StrainsError;
