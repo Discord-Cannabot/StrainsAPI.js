@@ -10,9 +10,7 @@ export interface BaseClientConfig {
 	token: string;
 }
 
-export const StrainsTokenRegex = /\$\d\D\$\d{2}\$[A-Z0-9]{31}\.[A-Z0-9]{21}/i
-
-
+export const StrainsTokenRegex = /^\$2[ayb]\$.{56}$/g;
 
 /**
  * Base Client Strains API
@@ -30,9 +28,16 @@ export class BaseClient {
 	 * @param options Options to configure the Client with
 	 */
 	constructor(token: string, options?: Partial<ICachingOptions>) {
-		if (typeof token !== 'string') throw new Error(`Invalid token type - Expected: string | Actual: ${typeof token}`);
+		if (typeof token !== "string") {
+			throw new TypeError(
+				`Invalid token type - Expected: string | Actual: ${typeof token}`
+			);
+		}
 
-		if (!StrainsTokenRegex.test(token)) throw new Error(`Invalid token: ${typeof token}`)
+		if (!StrainsTokenRegex.test(token)) {
+			throw new Error(`Invalid token: ${typeof token}`);
+		}
+
 		this.config = {
 			token,
 		};
