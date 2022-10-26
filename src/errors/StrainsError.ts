@@ -33,7 +33,7 @@ export class StrainsError extends Error {
 		if (data.errors) {
 			message += data.errors.join(" - ");
 		}
-		super(data.message);
+		super(message);
 
 		this.#code = data.code;
 
