@@ -10,7 +10,7 @@ export interface StrainsAPIError {
 	/**
 	 * Additional error information if applicable
 	 */
-	errors?: Record<string, string | undefined>;
+	errors?: string[];
 }
 
 /**
@@ -29,6 +29,10 @@ export class StrainsError extends Error {
 	 */
 	constructor(error: AxiosError<StrainsAPIError>) {
 		let data = error.response!.data;
+		let message: string = data.message;
+		if (data.errors) {
+			message += data.errors.join(" - ");
+		}
 		super(data.message);
 
 		this.#code = data.code;
@@ -50,8 +54,8 @@ export class StrainsError extends Error {
 	/**
 	 * List of errors that provide context to the error if applicable
 	 */
-	get errors(): StrainsAPIError["errors"] {
-		return this.raw.errors;
+	get errors(): NonNullable<StrainsAPIError["errors"]> | null {
+		return this.raw.errors ?? null;
 	}
 
 	/**
