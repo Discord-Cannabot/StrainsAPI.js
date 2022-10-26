@@ -10,7 +10,7 @@ export interface BaseClientConfig {
 	token: string;
 }
 
-export const StrainsTokenRegex = /^\$2[ayb]\$.{56}$/g;
+export const StrainsTokenRegex = /^\$2[ayb]\$.{56}$/;
 
 /**
  * Base Client Strains API
