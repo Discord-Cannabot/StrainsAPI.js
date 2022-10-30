@@ -4,18 +4,6 @@ import BaseHandler from "./BaseHandler";
 import Client from "../client/BaseClient";
 import { ICachingOptions } from "node-ts-cache";
 
-/**
- * Terms you can search for strains by
- */
-export enum SearchStrainBy {
-	NAME = "name",
-	ID = "id",
-	RACE = "race",
-	RATING = "rating",
-}
-
-export type StrainSearchTerm = `${SearchStrainBy}`;
-
 export interface StrainSearchParams {
 	name?: string;
 	description?: string;
@@ -27,7 +15,7 @@ export interface StrainSearchParams {
  * Handles Strains for the Client with a cache
  * @extends BaseHandler<Strain>
  */
-class StrainHandler extends BaseHandler<typeof Strain> {
+export class StrainHandler extends BaseHandler<typeof Strain> {
 	/**
 	 * @param client Client attached to the handler
 	 * @param options Options for the cache
