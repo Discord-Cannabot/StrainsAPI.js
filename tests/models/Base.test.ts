@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import Base from "../../src/models/Base";
-import Client from "../../src";
-import { RawStrain } from "../../src/models/Strain";
+import Client, { RawStrain } from "../../src";
 
 // client used for requests
 const client = new Client(process.env.API_TOKEN!);
@@ -25,7 +24,7 @@ before(async () => {
 describe("models/Base", () => {
 	describe("properties", () => {
 		context("raw", () => {
-			it("should be JSON like data", () => {
+			it("is JSON like data", () => {
 				expect(base.raw).to.deep.equal(data);
 			});
 		});

@@ -1,8 +1,7 @@
-import BaseClient from "../../src/client/BaseClient";
-import Recipe from "../../src/models/Recipe";
+import Client, { Recipe } from "../../src";
 import { expect } from "chai";
 
-const client = new BaseClient(process.env.API_TOKEN!);
+const client = new Client(process.env.API_TOKEN!);
 
 let recipe: Recipe;
 
@@ -12,23 +11,23 @@ before(async () => {
 
 describe("models/Recipe", () => {
 	context("id", () => {
-		it("should be a number", () => {
+		it("is a number", () => {
 			expect(recipe.id).to.be.a("number");
 		});
 
-		it("should be greater than 0", () => {
+		it("is greater than 0", () => {
 			expect(recipe.id).to.be.gte(0);
 		});
 	});
 
 	context("name", () => {
-		it("should be a string", () => {
+		it("is a string", () => {
 			expect(recipe.name).to.be.a("string");
 		});
 	});
 
 	context("ingredients", () => {
-		it("should be an array of strings", () => {
+		it("is an array of strings", () => {
 			expect(recipe.ingredients).to.be.an.instanceOf(Array);
 			expect(recipe.ingredients[0]).to.be.a(
 				"string",
@@ -39,7 +38,7 @@ describe("models/Recipe", () => {
 	});
 
 	context("steps", () => {
-		it("should be an array of strings", () => {
+		it("is an array of strings", () => {
 			expect(recipe.steps).to.be.an.instanceOf(Array);
 			expect(recipe.steps[0]).to.be.a(
 				"string",
@@ -49,7 +48,7 @@ describe("models/Recipe", () => {
 	});
 
 	context("image", () => {
-		it("should be a string", () => {
+		it("is a string", () => {
 			expect(recipe.image).to.be.a("string");
 		});
 
