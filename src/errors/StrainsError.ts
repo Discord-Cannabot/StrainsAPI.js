@@ -31,7 +31,7 @@ export class StrainsError extends Error {
 		let data = error.response!.data;
 		let message: string = data.message;
 		if (data.errors) {
-			message += data.errors.join(" - ");
+			message = `${message}: ${data.errors.join(" - ")}`;
 		}
 		super(message);
 
