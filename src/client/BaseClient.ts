@@ -55,11 +55,18 @@ export class BaseClient {
 		this.#instance.interceptors.response.use(
 			(success) => success,
 			(error) => {
-				if (!BaseClient.isStrainsError(error)) throw error;
+				if (!BaseClient.isAxiosError(error)) throw error;
 				//console.log(error.response?.data ?? error.response);
 				throw new StrainsError(error);
 			}
 		);
+
+		// Make sure api token is always up to date
+		this.#instance.interceptors.request.use((config) => {
+			config.headers ??= {};
+			config.headers.authorization = `Bearer ${this.config.token}`;
+			return config;
+		});
 
 		this.#strains = new StrainHandler(this, this.cacheConfig);
 		this.#recipes = new RecipeHandler(this, this.cacheConfig);
@@ -70,7 +77,7 @@ export class BaseClient {
 	 * @param error Error to check
 	 * @internal
 	 */
-	protected static isStrainsError(error: any): error is AxiosError<StrainsAPIError> {
+	static isAxiosError(error: any): error is AxiosError<StrainsAPIError> {
 		if (!axios.isAxiosError(error)) return false;
 		return !!error.response?.data;
 	}
