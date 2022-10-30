@@ -3,3 +3,4 @@ export * from "./errors/StrainsError";
 export * from "./models/Strain";
 export * from "./models/Recipe";
 export * from "./handlers/RecipeHandler";
+export * from "./handlers/StrainHandler";
