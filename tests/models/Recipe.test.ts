@@ -1,5 +1,5 @@
-import Client, { Recipe } from "../../src";
 import { expect } from "chai";
+import Client, { Recipe } from "../../src";
 
 const client = new Client(process.env.API_TOKEN!);
 

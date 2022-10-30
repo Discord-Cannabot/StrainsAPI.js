@@ -1,5 +1,5 @@
-import Client, { Strain } from "../../src";
 import { expect } from "chai";
+import Client, { Strain } from "../../src";
 
 const client = new Client(process.env.API_TOKEN!);
 
