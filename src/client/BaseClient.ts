@@ -10,6 +10,9 @@ export interface BaseClientConfig {
 	token: string;
 }
 
+/**
+ * Regex used to validate tokens passed into the BaseClient
+ */
 export const StrainsTokenRegex = /^\$2[ayb]\$.{56}$/;
 
 /**
@@ -124,7 +127,7 @@ export class BaseClient {
 	 * The Axios Instance used to make requests
 	 * @internal
 	 */
-	public get instance() {
+	get instance() {
 		return this.#instance;
 	}
 }
