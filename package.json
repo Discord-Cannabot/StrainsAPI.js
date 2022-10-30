@@ -11,6 +11,7 @@
 		"watch": "tsc --watch",
 		"start": "ts-node test.ts",
 		"test": "nyc --check-coverage mocha --require ts-node/register tests/**/*.test.ts --timeout 10000 --allow-uncaught",
+		"test:env": "env-cmd npm run test",
 		"test:quick": "mocha --require ts-node/register tests/**/*.test.ts --allow-uncaught --b"
 	},
 	"contributors": [
@@ -25,9 +26,10 @@
 	"devDependencies": {
 		"@types/chai": "^4.3.3",
 		"@types/mocha": "^9.1.1",
-		"@types/node": "^18.7.18",
+		"@types/node": "^18.11.4",
 		"chai": "^4.3.6",
 		"dotenv": "^16.0.2",
+		"env-cmd": "^10.1.0",
 		"mocha": "^10.0.0",
 		"nyc": "^15.1.0",
 		"ts-node": "^10.9.1",

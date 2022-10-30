@@ -3,9 +3,12 @@
 
 name: Node.js CI
 
+env:
+  API_TOKEN: ${{ secrets.API_TOKEN }}
+
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   pull_request:
     branches: [ "master" ]
 

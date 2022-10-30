@@ -11,6 +11,11 @@ export interface BaseClientConfig {
 }
 
 /**
+ * Regex used to validate tokens passed into the BaseClient
+ */
+export const StrainsTokenRegex = /^\$2[ayb]\$.{56}$/;
+
+/**
  * Base Client Strains API
  */
 export class BaseClient {
@@ -23,11 +28,23 @@ export class BaseClient {
 
 	/**
 	 * @param token The bearer token used to interact with the cannabot api
+	 * @param options Options to configure the Client with
 	 */
 	constructor(token: string, options?: Partial<ICachingOptions>) {
+		if (typeof token !== "string") {
+			throw new TypeError(
+				`Invalid token type - Expected: string | Actual: ${typeof token}`
+			);
+		}
+
+		if (!StrainsTokenRegex.test(token)) {
+			throw new Error(`Invalid token: ${typeof token}`);
+		}
+
 		this.config = {
 			token,
 		};
+
 		this.#cacheConfig = Object.assign(BaseClient.DefaultCacheConfig, options);
 		this.#instance = axios.create({
 			baseURL: "https://cannabot.net/api",
@@ -41,11 +58,18 @@ export class BaseClient {
 		this.#instance.interceptors.response.use(
 			(success) => success,
 			(error) => {
-				if (!BaseClient.isStrainsError(error)) throw error;
+				if (!BaseClient.isAxiosError(error)) throw error;
 				//console.log(error.response?.data ?? error.response);
 				throw new StrainsError(error);
 			}
 		);
+
+		// Make sure api token is always up to date
+		this.#instance.interceptors.request.use((config) => {
+			config.headers ??= {};
+			config.headers.authorization = `Bearer ${this.config.token}`;
+			return config;
+		});
 
 		this.#strains = new StrainHandler(this, this.cacheConfig);
 		this.#recipes = new RecipeHandler(this, this.cacheConfig);
@@ -56,7 +80,7 @@ export class BaseClient {
 	 * @param error Error to check
 	 * @internal
 	 */
-	protected static isStrainsError(error: any): error is AxiosError<StrainsAPIError> {
+	static isAxiosError(error: any): error is AxiosError<StrainsAPIError> {
 		if (!axios.isAxiosError(error)) return false;
 		return !!error.response?.data;
 	}
@@ -103,7 +127,7 @@ export class BaseClient {
 	 * The Axios Instance used to make requests
 	 * @internal
 	 */
-	public get instance() {
+	get instance() {
 		return this.#instance;
 	}
 }

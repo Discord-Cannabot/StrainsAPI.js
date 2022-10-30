@@ -52,12 +52,16 @@ export class BaseHandler<Holds extends ClassConstructor> {
 		return this.#holds;
 	}
 
-	get<T extends unknown = InstanceType<Holds>>(query: string): Promise<T | undefined> {
-		return this.cache.getItem<T>(query);
+	async get<T extends unknown = InstanceType<Holds>>(query: string): Promise<T | null> {
+		return (await this.cache.getItem<T>(query)) ?? null;
 	}
 
-	set(key: string, content: unknown, config?: ICachingOptions): Promise<void> {
-		return this.cache.setItem(key, content, config ?? this.config);
+	async set<T extends unknown = InstanceType<Holds>>(
+		key: string,
+		content: T,
+		config?: ICachingOptions
+	): Promise<void> {
+		return await this.cache.setItem(key, content, config ?? this.config);
 	}
 }
 
