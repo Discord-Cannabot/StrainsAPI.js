@@ -4,17 +4,9 @@ import { ICachingOptions } from "node-ts-cache";
 import { RawRecipe } from "../models/Recipe";
 import Recipe from "../models/Recipe";
 
-/**
- * Values you can search recipes by
- */
-export enum SearchRecipeBy {
-	ID = "id",
+export interface RecipeSearchParams {
+	id: number;
 }
-
-/**
- * Term used to narrow search
- */
-export type RecipeSearchTerm = `${SearchRecipeBy}`;
 
 /**
  * Handles recipes for the Client with cache
@@ -46,25 +38,24 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 	}
 
 	/**
-	 * Search for a recipe
-	 * @param by What to search by
-	 * @param query Search query
+	 * Filter strains using the API
+	 * @param params Params to filter strains for
 	 * @param force Force an API request and update the cache
 	 */
-	async search(by: RecipeSearchTerm, query: string, force: boolean = false) {
-		let recipes = await this.cache.getItem<Recipe[]>(query);
+	async filter(params: RecipeSearchParams, force: boolean = false) {
+		let recipes = await this.cache.getItem<Recipe[]>(JSON.stringify(params, null, 0));
 		if (recipes && !force) return recipes;
 		recipes = [];
 
-		const { data } = await this.client.instance.get<RawRecipe[]>(
-			`recipes/search/${by}/${query}`
-		);
+		const { data } = await this.client.instance.get<RawRecipe[]>("recipes", {
+			params,
+		});
 
 		for (const recipe of data) {
 			recipes.push(new Recipe(recipe));
 		}
 
-		await this.set(query, recipes);
+		this.set(JSON.stringify(params, null, 0), recipes, this.config);
 		return recipes;
 	}
 
@@ -74,6 +65,6 @@ export class RecipeHandler extends BaseHandler<typeof Recipe> {
 	 * @param force Force an API request and update the cache
 	 */
 	async byId(id: number, force: boolean = false) {
-		return await this.search(SearchRecipeBy.ID, `${id}`, force);
+		return await this.filter({ id }, force);
 	}
 }
