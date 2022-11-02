@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { expect } from "chai";
 import { ICachingOptions } from "node-ts-cache";
-import BaseClient, { RecipeHandler, StrainHandler } from "../../src";
+import BaseClient, { RecipeHandler, StrainHandler, StrainsError } from "../../src";
 
 const TOKEN: string = process.env.API_TOKEN!;
 const BAD_TOKEN: string = "$foobar$token.would.usually.go.here.but.this.is.fake";
@@ -84,15 +84,19 @@ describe("client/BaseClient", () => {
 		});
 
 		context("isAxiosError", () => {
-			it("returns true on axios errors", () => {
+			it("returns true on strains api errors", () => {
 				const axiosError = new AxiosError("example error", "404", {}, null, {
-					data: { error: "foobar" },
+					data: { code: "foobar" },
 					status: 404,
 					statusText: "404",
 					headers: {},
 					config: {},
 				});
 				expect(BaseClient.isAxiosError(axiosError)).to.be.true;
+			});
+
+			it("returns false on non axios errors", () => {
+				expect(BaseClient.isAxiosError(new TypeError())).to.be.false;
 			});
 		});
 	});
@@ -102,11 +106,19 @@ describe("client/BaseClient", () => {
 			it("is StrainHandler", () => {
 				expect(client.strains).to.be.an.instanceOf(StrainHandler);
 			});
+
+			it("uses client cache config", () => {
+				expect(client.strains.config).to.be.deep.equal(client.cacheConfig);
+			});
 		});
 
 		context("recipes", () => {
 			it("is RecipeHandler", () => {
 				expect(client.recipes).to.be.an.instanceOf(RecipeHandler);
+			});
+
+			it("uses client cache config", () => {
+				expect(client.recipes.config).to.be.deep.equal(client.cacheConfig);
 			});
 		});
 
@@ -154,6 +166,37 @@ describe("client/BaseClient", () => {
 		context("instance", () => {
 			it("is a funciton", () => {
 				expect(client.instance).to.be.an.instanceOf(Function);
+			});
+
+			it("throws non StrainsError", async () => {
+				try {
+					await client.instance.request({
+						method: "NOT_A_METHOD",
+					});
+				} catch (error) {
+					if (!StrainsError.isStrainsError(error)) throw error;
+					expect(error).to.be.instanceOf(StrainsError);
+					expect(error.message).to.be.equal(
+						"The NOT_A_METHOD method is not supported for this route. Supported methods: GET, HEAD."
+					);
+				}
+			});
+
+			it("fixes request config", async () => {
+				expect(
+					async () =>
+						await client.instance.get("recipes", {
+							headers: undefined,
+						})
+				).to.not.throw(Error);
+
+				expect(async () => {
+					await client.instance.get("recipes", {
+						headers: {
+							authorization: "NOT_A_REAL_TOKEN",
+						},
+					});
+				}).to.not.throw(Error);
 			});
 		});
 	});
