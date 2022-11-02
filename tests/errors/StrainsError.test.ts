@@ -23,12 +23,9 @@ const examplePartialError: StrainsAPIError = Object.freeze({
 });
 
 const expectedRealError: StrainsAPIError = Object.freeze({
-	code: "invalid_parameters",
-	message: "Invalid search parameters",
-	status: 422,
-	errors: [
-		"Race must be of type string and must be one of the following: indica, sativa, hybrid.",
-	],
+	code: "invalid_token",
+	message: "The provided API token is invalid.",
+	status: 401,
 });
 
 const baseError = new StrainsError({
@@ -44,14 +41,12 @@ const partialError = new StrainsError({
 } as unknown as AxiosError<StrainsAPIError>);
 
 let realError: StrainsError;
-const client = new Client(process.env.API_TOKEN!);
+
+const client = new Client("$2y$10$WeedWeedWeedWeedWeed4.WeedWeed2.WeedWeedWeedWeedWeed0");
 
 before(async () => {
 	try {
-		await client.strains.filter({
-			// @ts-expect-error
-			race: "not_a_race",
-		});
+		await client.strains.all();
 	} catch (error) {
 		if (!StrainsError.isStrainsError(error)) throw error;
 		realError = error;
