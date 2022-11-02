@@ -57,9 +57,7 @@ export class BaseClient {
 		// Handle API errors
 		this.#instance.interceptors.response.use(
 			(success) => success,
-			(error) => {
-				if (!BaseClient.isAxiosError(error)) throw error;
-				//console.log(error.response?.data ?? error.response);
+			(error: AxiosError<StrainsAPIError>) => {
 				throw new StrainsError(error);
 			}
 		);
@@ -81,8 +79,7 @@ export class BaseClient {
 	 * @internal
 	 */
 	static isAxiosError(error: any): error is AxiosError<StrainsAPIError> {
-		if (!axios.isAxiosError(error)) return false;
-		return !!error.response?.data;
+		return axios.isAxiosError(error);
 	}
 
 	/**
