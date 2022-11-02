@@ -1,6 +1,6 @@
 export { default, default as StrainsClient } from "./client/BaseClient";
-export * from "./errors/StrainsError";
-export * from "./models/Strain";
-export * from "./models/Recipe";
-export * from "./handlers/RecipeHandler";
-export * from "./handlers/StrainHandler";
+export { StrainsAPIError, StrainsError } from "./errors/StrainsError";
+export { Strain, StrainRaceType, RawStrain } from "./models/Strain";
+export { Recipe, RawRecipe } from "./models/Recipe";
+export { RecipeHandler, RecipeSearchParams } from "./handlers/RecipeHandler";
+export { StrainHandler, StrainSearchParams } from "./handlers/StrainHandler";
